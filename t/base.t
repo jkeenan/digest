@@ -1,12 +1,14 @@
 #!perl -w
 
+use strict;
+use warnings;
+
 use Test::More tests => 13;
 
 {
    package LenDigest;
    require Digest::base;
-   use vars qw(@ISA);
-   @ISA = qw(Digest::base);
+   our @ISA = qw(Digest::base);
 
    sub new {
 	my $class = shift;

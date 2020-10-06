@@ -1,12 +1,15 @@
 #!perl -w
 
+use strict;
+use warnings;
+
 use Test::More tests => 5;
 
 {
    package Digest::Foo;
+   $INC{'Digest/Foo.pm'} = "local";
    require Digest::base;
-   use vars qw(@ISA $VERSION);
-   @ISA = qw(Digest::base);
+   our @ISA = qw(Digest::base);
 
    sub new {
 	my $class = shift;
@@ -30,10 +33,10 @@ use Digest::file qw(digest_file digest_file_hex digest_file_base64);
 
 my $file = "test-$$";
 die if -f $file;
-open(F, ">$file") || die "Can't create '$file': $!";
-binmode(F);
-print F "foo\0\n";
-close(F) || die "Can't write '$file': $!";
+open(my $fh, ">$file") || die "Can't create '$file': $!";
+binmode($fh);
+print $fh "foo\0\n";
+close($fh) || die "Can't write '$file': $!";
 
 is(digest_file($file, "Foo"), "0005");
 
@@ -45,7 +48,7 @@ if (ord('A') == 193) { # EBCDIC.
     is(digest_file_base64($file, "Foo"), "MDAwNQ");
 }
 
-unlink($file) || warn "Can't unlink '$file': $!";
-
 ok !eval { digest_file("not-there.txt", "Foo") };
 ok $@;
+
+END { unlink "$file"; }
