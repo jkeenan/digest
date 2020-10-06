@@ -6,40 +6,39 @@ use warnings;
 our $VERSION = "1.17";
 
 our %MMAP = (
-  "SHA-1"      => [["Digest::SHA", 1], "Digest::SHA1", ["Digest::SHA2", 1]],
-  "SHA-224"    => [["Digest::SHA", 224]],
-  "SHA-256"    => [["Digest::SHA", 256], ["Digest::SHA2", 256]],
-  "SHA-384"    => [["Digest::SHA", 384], ["Digest::SHA2", 384]],
-  "SHA-512"    => [["Digest::SHA", 512], ["Digest::SHA2", 512]],
-  "SHA3-224"   => [["Digest::SHA3", 224]],
-  "SHA3-256"   => [["Digest::SHA3", 256]],
-  "SHA3-384"   => [["Digest::SHA3", 384]],
-  "SHA3-512"   => [["Digest::SHA3", 512]],
-  "HMAC-MD5"   => "Digest::HMAC_MD5",
-  "HMAC-SHA-1" => "Digest::HMAC_SHA1",
-  "CRC-16"     => [["Digest::CRC", type => "crc16"]],
-  "CRC-32"     => [["Digest::CRC", type => "crc32"]],
-  "CRC-CCITT"  => [["Digest::CRC", type => "crcccitt"]],
-  "RIPEMD-160" => "Crypt::RIPEMD160",
+    "SHA-1"    => [ [ "Digest::SHA",  1 ], "Digest::SHA1", [ "Digest::SHA2", 1 ] ],
+    "SHA-224"  => [ [ "Digest::SHA",  224 ] ],
+    "SHA-256"  => [ [ "Digest::SHA",  256 ], [ "Digest::SHA2", 256 ] ],
+    "SHA-384"  => [ [ "Digest::SHA",  384 ], [ "Digest::SHA2", 384 ] ],
+    "SHA-512"  => [ [ "Digest::SHA",  512 ], [ "Digest::SHA2", 512 ] ],
+    "SHA3-224" => [ [ "Digest::SHA3", 224 ] ],
+    "SHA3-256" => [ [ "Digest::SHA3", 256 ] ],
+    "SHA3-384" => [ [ "Digest::SHA3", 384 ] ],
+    "SHA3-512" => [ [ "Digest::SHA3", 512 ] ],
+    "HMAC-MD5"   => "Digest::HMAC_MD5",
+    "HMAC-SHA-1" => "Digest::HMAC_SHA1",
+    "CRC-16"     => [ [ "Digest::CRC", type => "crc16" ] ],
+    "CRC-32"     => [ [ "Digest::CRC", type => "crc32" ] ],
+    "CRC-CCITT"  => [ [ "Digest::CRC", type => "crcccitt" ] ],
+    "RIPEMD-160" => "Crypt::RIPEMD160",
 );
 
-sub new
-{
-    shift;  # class ignored
+sub new {
+    shift;    # class ignored
     my $algorithm = shift;
-    my $impl = $MMAP{$algorithm} || do {
+    my $impl      = $MMAP{$algorithm} || do {
         $algorithm =~ s/\W+//g;
         "Digest::$algorithm";
     };
     $impl = [$impl] unless ref($impl);
-    local $@;  # don't clobber it for our caller
+    local $@;    # don't clobber it for our caller
     my $err;
-    for  (@$impl) {
+    for (@$impl) {
         my $class = $_;
         my @args;
-        ($class, @args) = @$class if ref($class);
+        ( $class, @args ) = @$class if ref($class);
         no strict 'refs';
-        unless (exists ${"$class\::"}{"VERSION"}) {
+        unless ( exists ${"$class\::"}{"VERSION"} ) {
             my $pm_file = $class . ".pm";
             $pm_file =~ s{::}{/}g;
             eval { require $pm_file };
@@ -48,17 +47,17 @@ sub new
                 next;
             }
         }
-        return $class->new(@args, @_);
+        return $class->new( @args, @_ );
     }
     die $err;
 }
 
 our $AUTOLOAD;
-sub AUTOLOAD
-{
-    my $class = shift;
-    my $algorithm = substr($AUTOLOAD, rindex($AUTOLOAD, '::')+2);
-    $class->new($algorithm, @_);
+
+sub AUTOLOAD {
+    my $class     = shift;
+    my $algorithm = substr( $AUTOLOAD, rindex( $AUTOLOAD, '::' ) + 2 );
+    $class->new( $algorithm, @_ );
 }
 
 1;
