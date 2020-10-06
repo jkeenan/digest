@@ -1,43 +1,35 @@
-require 5.004;
+require 5.006;
+use strict;
+use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    'NAME'	   => 'Digest',
-    'VERSION_FROM' => 'Digest.pm',
-    ($] >= 5.008 ? ('INSTALLDIRS'  => 'perl') : ()),
-    ABSTRACT_FROM => 'Digest.pm',
-    AUTHOR => 'Gisle Aas <gisle@activestate.com>',
-    LICENSE => 'perl',
-    MIN_PERL_VERSION => '5.004',
-    'PREREQ_PM'    => {
+    'NAME'               => 'Digest',
+    'AUTHOR'             => 'Gisle Aas <gisle@activestate.com>',
+    'VERSION_FROM'       => 'lib/Digest.pm',
+    'ABSTRACT_FROM'      => 'lib/Digest.pm',
+    'LICENSE'            => 'perl',
+    'MIN_PERL_VERSION'   => '5.006',
+    'CONFIGURE_REQUIRES' => {
+        'ExtUtils::MakeMaker' => '0',
+    },
+    'PREREQ_PM' => {
         'MIME::Base64' => 0,
         'Test::More'   => '0.47'
     },
-    META_MERGE => {
-        resources => {
-            repository => 'http://github.com/gisle/digest',
+    'TEST_REQUIRES' => {
+        'Test::More' => '0',
+    },
+    'INSTALLDIRS' => ( ( $] >= '5.009005' && $] < '5.012' ) ? 'perl' : 'site' ),
+    'dist'        => { 'COMPRESS' => 'gzip -9f', 'SUFFIX' => 'gz', },
+    'clean'       => { 'FILES' => 'Digest-*' },
+
+    'META_MERGE' => {
+        'resources' => {
+            'license'    => 'http://dev.perl.org/licenses/',
+            'bugtracker' => 'https://github.com/Dual-Life/digest/issues',
+            'repository' => 'https://github.com/dual-Life/digest/',
+
         }
     },
 );
-
-BEGIN {
-    # compatibility with older versions of MakeMaker
-    my $developer = -f ".gitignore";
-    my %mm_req = (
-        LICENCE => 6.31,
-        META_MERGE => 6.45,
-        META_ADD => 6.45,
-        MIN_PERL_VERSION => 6.48,
-    );
-    undef(*WriteMakefile);
-    *WriteMakefile = sub {
-        my %arg = @_;
-        for (keys %mm_req) {
-            unless (eval { ExtUtils::MakeMaker->VERSION($mm_req{$_}) }) {
-                warn "$_ $@" if $developer;
-                delete $arg{$_};
-            }
-        }
-        ExtUtils::MakeMaker::WriteMakefile(%arg);
-    };
-}
