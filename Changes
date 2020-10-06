@@ -1,3 +1,17 @@
+1.18 XXX 2020-10-XX
+- correct documentation for add_bits
+- Explain $args,... in constructor prototypes
+- Add base64_padded_digest method
+- Add support for the SHA3 digests
+- Update .gitignore and get make manifest working
+- Github CI
+- Move Digest to a more modern directory tree layout
+- Enable strict/warnings for code and tests
+- Drop use vars
+- Provide a consistent tidy to the code base
+- Get rid of the use of bareword file handles
+- Modernize the changelog
+
 1.17 Sun 2011-10-02
 - Less noisy 'git status' output - Gisle Aas
 - Merge pull request #1 from schwern/bug/require_eval - Gisle Aas
