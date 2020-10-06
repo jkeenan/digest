@@ -57,14 +57,14 @@ is( $ctx->hexdigest, $EBCDIC ? "86f0f0f0f3" : "6630303033" );
 $ctx->add("foo");
 is( $ctx->b64digest, $EBCDIC ? "hvDw8PM" : "ZjAwMDM" );
 
-open( F, ">xxtest$$" ) || die;
-binmode(F);
-print F "abc" x 100, "\n";
-close(F) || die;
+open( my $fh, ">xxtest$$" ) || die;
+binmode($fh);
+print $fh "abc" x 100, "\n";
+close($fh) || die;
 
-open( F, "xxtest$$" ) || die;
-$ctx->addfile(*F);
-close(F);
+open( my $fh2, "xxtest$$" ) || die;
+$ctx->addfile($fh2);
+close($fh2);
 unlink("xxtest$$") || warn;
 
 is( $ctx->digest, "a0301" );

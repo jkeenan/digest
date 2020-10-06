@@ -14,12 +14,11 @@ our @EXPORT_OK = qw(digest_file_ctx digest_file digest_file_hex digest_file_base
 sub digest_file_ctx {
     my $file = shift;
     croak("No digest algorithm specified") unless @_;
-    local *F;
-    open( F, "<", $file ) || croak("Can't open '$file': $!");
-    binmode(F);
+    open( my $fh, "<", $file ) || croak("Can't open '$file': $!");
+    binmode($fh);
     my $ctx = Digest->new(@_);
-    $ctx->addfile(*F);
-    close(F);
+    $ctx->addfile($fh);
+    close($fh);
     return $ctx;
 }
 
