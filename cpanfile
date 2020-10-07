@@ -6,5 +6,6 @@ requires "Digest::MD5" => "0";
 
 on 'test' => sub {
     requires 'Test::More' => '0';
+    requires 'File::Temp' => '0';
 };
 
