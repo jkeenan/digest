@@ -3,7 +3,7 @@ package Digest::base;
 use strict;
 use warnings;
 
-our $VERSION = "1.18";
+our $VERSION = "1.19";
 
 # subclass is supposed to implement at least these
 sub new;
