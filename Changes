@@ -1,5 +1,5 @@
-1.18 XXX 2020-10-XX
-- correct documentation for add_bits
+1.18 Tue 2020-10-13
+- Correct documentation for add_bits
 - Explain $args,... in constructor prototypes
 - Add base64_padded_digest method
 - Add support for the SHA3 digests
@@ -11,6 +11,7 @@
 - Provide a consistent tidy to the code base
 - Get rid of the use of bareword file handles
 - Modernize the changelog
+- Use File::Temp for temporary test files
 
 1.17 Sun 2011-10-02
 - Less noisy 'git status' output - Gisle Aas
